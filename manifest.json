@@ -1,0 +1,11 @@
+{
+  "domain": "httpcontrol",
+  "name": "httpcontrol",
+  "version": "0.1",
+  "codeowners": ["@twratajczak"],
+  "config_flow": true,
+  "integration_type": "device",
+  "dependencies": [],
+  "requirements": [],
+  "iot_class": "local_polling"
+}
