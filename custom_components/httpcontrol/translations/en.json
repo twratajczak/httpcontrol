@@ -1,0 +1,32 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Set up tinycontrol integration",
+        "data": {
+          "host": "Host",
+          "username": "Username",
+          "password": "Password",
+          "scan_interval": "Data update interval [s]"
+        }
+      },
+      "reconfigure": {
+        "title": "Update tinycontrol integration",
+        "data": {
+          "host": "Host",
+          "username": "Username",
+          "password": "Password",
+          "scan_interval": "Data update interval [s]"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Invalid username or password",
+      "cannot_connect": "Failed to connect"
+    },
+    "abort": {
+      "already_configured": "This device is already configured",
+      "cannot_connect": "Failed to connect"
+    }
+  }
+}

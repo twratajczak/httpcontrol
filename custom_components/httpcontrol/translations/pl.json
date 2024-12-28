@@ -1,0 +1,32 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Skonfiguruj integracje tinycontrol",
+        "data": {
+          "host": "Host",
+          "username": "Nazwa użytkownika",
+          "password": "Hasło",
+          "scan_interval": "Interwał aktualizacji danych [s]"
+        }
+      },
+      "reconfigure": {
+        "title": "Modyfikuj integracje tinycontrol",
+        "data": {
+          "host": "Host",
+          "username": "Nazwa użytkownika",
+          "password": "Hasło",
+          "scan_interval": "Interwał aktualizacji danych [s]"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Niepoprawna nazwa użytkownika lub hasło",
+      "cannot_connect": "Nie udało się połączyć"
+    },
+    "abort": {
+      "already_configured": "Urządzenie jest już skonfigurowane",
+      "cannot_connect": "Nie udało się połączyć"
+    }
+  }
+}
