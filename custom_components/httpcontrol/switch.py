@@ -39,7 +39,7 @@ async def async_setup_entry(
         if entity.key in coordinator.data.state
     )
 
-    if coordinator.is_2x():
+    if coordinator.is_2x() and "out6" in coordinator.data.state:
         async_add_entities([Httpcontrol2xInvertSwitch(coordinator)])
 
 class HttpcontrolSwitch(HttpcontrolEntity, SwitchEntity):
@@ -69,7 +69,7 @@ class HttpcontrolSwitch(HttpcontrolEntity, SwitchEntity):
         await self.coordinator.async_set_out(self.entity_description.key, value)
 
     def _invert(self) -> bool:
-        return self.coordinator.is_2x() and bool(int(self.coordinator.data.state["out6"]))
+        return self.coordinator.is_2x() and bool(int(self.coordinator.data.state.get("out6", 0)))
 
 class Httpcontrol2xInvertSwitch(HttpcontrolSwitch):
     def __init__(self, coordinator: HttpcontrolCoordinator):
