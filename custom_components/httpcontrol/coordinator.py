@@ -33,10 +33,13 @@ class HttpcontrolData:
 
 class HttpcontrolCoordinator(DataUpdateCoordinator[HttpcontrolData]):
     entry: ConfigEntry
+    labels: dict
+    rtimes: dict
 
     def __init__(self, hass: HomeAssistant, entry: ConfigEntry) -> None:
         self.entry = entry
         self.labels = {}
+        self.rtimes = {}
         super().__init__(
             hass,
             LOGGER,
@@ -83,6 +86,12 @@ class HttpcontrolCoordinator(DataUpdateCoordinator[HttpcontrolData]):
                 self.labels[f"ia{i+7}"] = names[i]
             for i in range(6, 9):
                 self.labels[f"ind{i-5}"] = names[i]
+            for i in range(6, 12):
+                self.labels[f"out{i-6}"] = data[f"r{i}"]
+
+            for i in range(0, 6):
+                if (rtime := data[f"r{i}"]) != "0":
+                    self.rtimes[f"out{i}"] = int(rtime)
 
     async def _async_update_data(self) -> HttpcontrolData:
         try:

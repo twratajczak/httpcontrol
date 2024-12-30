@@ -1,5 +1,6 @@
 from dataclasses import dataclass
-from typing import Callable
+from typing import Callable, Any
+from collections.abc import Mapping
 
 from homeassistant.components.switch import SwitchEntity, SwitchEntityDescription, SwitchDeviceClass
 from homeassistant.config_entries import ConfigEntry
@@ -59,6 +60,13 @@ class HttpcontrolSwitch(HttpcontrolEntity, SwitchEntity):
         if self._invert():
             value = not value
         return value
+
+    @property
+    def extra_state_attributes(self) -> Mapping[str, Any] | None:
+        attrs = {}
+        if rtime := self.coordinator.rtimes.get(self.entity_description.key, None):
+            attrs["Reset time"] = rtime
+        return attrs
 
     async def async_turn_on(self) -> None:
         value = 0 if self._invert() else 1
