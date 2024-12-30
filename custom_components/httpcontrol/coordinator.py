@@ -35,11 +35,13 @@ class HttpcontrolCoordinator(DataUpdateCoordinator[HttpcontrolData]):
     entry: ConfigEntry
     labels: dict
     rtimes: dict
+    measure_unit: str | None
 
     def __init__(self, hass: HomeAssistant, entry: ConfigEntry):
         self.entry = entry
         self.labels = {}
         self.rtimes = {}
+        self.measure_unit = None
         super().__init__(
             hass,
             LOGGER,
@@ -84,6 +86,7 @@ class HttpcontrolCoordinator(DataUpdateCoordinator[HttpcontrolData]):
             self.labels["co2"] = data.get("co2name")
         elif self.is_2x():
             data = await self._async_get("st2.xml")
+            self.measure_unit = data["mm"]
             names = data["d"].split("*")
             for i in range(0, 6):
                 self.labels[f"ia{i+7}"] = names[i]
@@ -97,6 +100,7 @@ class HttpcontrolCoordinator(DataUpdateCoordinator[HttpcontrolData]):
                     self.rtimes[f"out{i}"] = int(rtime)
         else:
             data = await self._async_get("st2.xml")
+            self.measure_unit = data["mm"]
             names = data["d"].split("*")
             for i in range(0, 6):
                 self.labels[f"ia{i+7}"] = names[i]

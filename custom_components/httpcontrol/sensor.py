@@ -96,6 +96,12 @@ SENSORS_1x = [
         native_unit_of_measurement=PERCENTAGE,
         value_fn = lambda x: int(x) / 10.0,
     ),
+    HttpcontrolSensorDescription(
+        key="ia17",
+        name="INP4D measure",
+        suggested_display_precision=3,
+        value_fn = lambda x: int(x) / 1000.0,
+    ),
 ]
 
 SENSORS_2x = [
@@ -180,6 +186,12 @@ SENSORS_2x = [
         native_unit_of_measurement=PERCENTAGE,
         value_fn = lambda x: int(x) / 10.0,
     ),
+    HttpcontrolSensorDescription(
+        key="ia17",
+        name="INP4D measure",
+        suggested_display_precision=3,
+        value_fn = lambda x: int(x) / 1000.0,
+    ),
 ]
 SENSORS_3x = [
     HttpcontrolSensorDescription(
@@ -245,6 +257,7 @@ SENSORS_3x = [
         HttpcontrolSensorDescription(
             key=f"inpp{i}",
             name=f"Input {i}",
+            state_class=SensorStateClass.TOTAL_INCREASING,
             value_fn=lambda x: int(x) / 100.0,
         )
         for i in range(1, 7)
@@ -280,6 +293,8 @@ class HttpcontrolSensor(HttpcontrolEntity, SensorEntity):
         self._attr_unique_id = coordinator.unique_id(description.key)
         if name := coordinator.labels.get(description.key):
             self._attr_name = name
+        if "ia17" == description.key:
+            self._attr_native_unit_of_measurement = coordinator.measure_unit
 
     @property
     def native_value(self) -> float | int | None:
