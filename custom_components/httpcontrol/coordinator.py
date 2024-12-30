@@ -36,7 +36,7 @@ class HttpcontrolCoordinator(DataUpdateCoordinator[HttpcontrolData]):
     labels: dict
     rtimes: dict
 
-    def __init__(self, hass: HomeAssistant, entry: ConfigEntry) -> None:
+    def __init__(self, hass: HomeAssistant, entry: ConfigEntry):
         self.entry = entry
         self.labels = {}
         self.rtimes = {}
@@ -47,6 +47,9 @@ class HttpcontrolCoordinator(DataUpdateCoordinator[HttpcontrolData]):
             update_interval=timedelta(seconds=entry.data[CONF_SCAN_INTERVAL]),
             always_update=False,
         )
+
+    def is_1x(self) -> bool:
+        return self.entry.data[CONF_MODEL] == "1.x"
 
     def is_2x(self) -> bool:
         return self.entry.data[CONF_MODEL] == "2.x"
@@ -79,18 +82,30 @@ class HttpcontrolCoordinator(DataUpdateCoordinator[HttpcontrolData]):
             for i in enumerate([1, 25, 4, 10]):
                 self.labels[f"pm{i}"] = data.get(f"pm{i}name")
             self.labels["co2"] = data.get("co2name")
+        elif self.is_2x():
+            data = await self._async_get("st2.xml")
+            names = data["d"].split("*")
+            for i in range(0, 6):
+                self.labels[f"ia{i+7}"] = names[i]
+            for i in range(6, 10):
+                self.labels[f"di{i-5}"] = names[i]
+
+            for i in range(6, 12):
+                self.labels[f"out{i-6}"] = data[f"r{i}"]
+            for i in range(0, 6):
+                if (rtime := data[f"r{i}"]) != "0":
+                    self.rtimes[f"out{i}"] = int(rtime)
         else:
             data = await self._async_get("st2.xml")
             names = data["d"].split("*")
-            for i in range(0, 5):
+            for i in range(0, 6):
                 self.labels[f"ia{i+7}"] = names[i]
-            for i in range(6, 9):
-                self.labels[f"ind{i-5}"] = names[i]
+            for i in range(6, 10):
+                self.labels[f"di{i-5}"] = names[i]
 
-            outs = 6 if "r11" in data else 5
-            for i in range(outs, 2*outs):
-                self.labels[f"out{i-outs}"] = data[f"r{i}"]
-            for i in range(0, outs):
+            for i in range(5, 10):
+                self.labels[f"out{i-5}"] = data[f"r{i}"]
+            for i in range(0, 5):
                 if (rtime := data.get(f"r{i}", "0")) != "0":
                     self.rtimes[f"out{i}"] = int(rtime)
 

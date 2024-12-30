@@ -69,12 +69,16 @@ class HttpcontrolFlowHandler(ConfigFlow, domain=DOMAIN):
           self.name = network["sname"]
         except:
           board = await self._async_get("board.xml")
-          self.model = "2.x"
           self.mac = format_mac(board["b6"])
           self.name = board["b7"]
           st2 = await self._async_get("st2.xml")
-          self.hw_version = "2." + st2["hw"]
           self.sw_version = st2["ver"]
+          if "ser" in st2:
+              self.model = "1.x"
+              self.hw_version = "1." + st2["hw"]
+          else:
+              self.model = "2.x"
+              self.hw_version = "2." + st2["hw"]
         await self.async_set_unique_id(self.mac, raise_on_progress=raise_on_progress)
         self._abort_if_unique_id_configured(updates=self._to_data())
 

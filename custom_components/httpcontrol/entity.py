@@ -4,11 +4,10 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from .const import DOMAIN
 from .coordinator import HttpcontrolCoordinator
 
-
 class HttpcontrolEntity(CoordinatorEntity[HttpcontrolCoordinator]):
     _attr_has_entity_name = True
 
-    def __init__(self, coordinator: HttpcontrolCoordinator) -> None:
+    def __init__(self, coordinator: HttpcontrolCoordinator):
         super().__init__(coordinator)
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, coordinator.data.mac)},

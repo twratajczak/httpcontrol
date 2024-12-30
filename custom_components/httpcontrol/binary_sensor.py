@@ -20,24 +20,18 @@ class HttpcontrolBinarySensorDescription(BinarySensorEntityDescription):
 
 
 SENSORS_2x = [
-    *[
-        HttpcontrolBinarySensorDescription(
-            key=f"di{i}",
-            name=f"INP{i}D",
-            value_fn=lambda x: x == "up"
-        )
-        for i in range(0, 4)
-    ],
+    HttpcontrolBinarySensorDescription(
+        key=f"di{i}",
+        name=f"INP{i}D",
+        value_fn=lambda x: x == "up"
+    ) for i in range(0, 4)
 ]
 SENSORS_3x = [
-    *[
-        HttpcontrolBinarySensorDescription(
-            key=f"ind{i}",
-            name=f"INP{i}D",
-            value_fn=lambda x: bool(x)
-        )
-        for i in range(0, 4)
-    ],
+    HttpcontrolBinarySensorDescription(
+        key=f"ind{i}",
+        name=f"INP{i}D",
+        value_fn=lambda x: bool(x)
+    ) for i in range(0, 4)
 ]
 
 async def async_setup_entry(

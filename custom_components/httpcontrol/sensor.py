@@ -31,8 +31,9 @@ class HttpcontrolSensorDescription(SensorEntityDescription):
     entity_registry_enabled_default: bool = False
     state_class: str = SensorStateClass.MEASUREMENT
     value_fn: Callable = lambda x: int(x)
+    suggested_display_precision=1
 
-SENSORS_2x = [
+SENSORS_1x = [
     HttpcontrolSensorDescription(
         key="ia0",
         name="Board Temperature",
@@ -40,7 +41,6 @@ SENSORS_2x = [
         entity_registry_enabled_default=True,
         device_class=SensorDeviceClass.TEMPERATURE,
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
-        suggested_display_precision=1,
         value_fn = lambda x: int(x) / 10.0,
     ),
     HttpcontrolSensorDescription(
@@ -50,7 +50,71 @@ SENSORS_2x = [
         entity_registry_enabled_default=True,
         device_class=SensorDeviceClass.VOLTAGE,
         native_unit_of_measurement=UnitOfElectricPotential.VOLT,
-        suggested_display_precision=1,
+        value_fn = lambda x: int(x) / 10.0,
+    ),
+    HttpcontrolSensorDescription(
+        key="ia2",
+        name="Inp1",
+        value_fn = lambda x: int(x) / 10.0,
+    ),
+    HttpcontrolSensorDescription(
+        key="ia4",
+        name="Inp3",
+        device_class=SensorDeviceClass.VOLTAGE,
+        native_unit_of_measurement=UnitOfElectricPotential.VOLT,
+        value_fn = lambda x: int(x) / 10.0,
+    ),
+    HttpcontrolSensorDescription(
+        key="ia5",
+        name="Inp4",
+        device_class=SensorDeviceClass.CURRENT,
+        native_unit_of_measurement=UnitOfElectricCurrent.AMPERE,
+        suggested_display_precision=2,
+        value_fn = lambda x: int(x) / 100.0,
+    ),
+    *[
+        HttpcontrolSensorDescription(
+            key=f"ia{i+1}",
+            name=f"Inp{i}",
+            device_class=SensorDeviceClass.TEMPERATURE,
+            native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+            value_fn = lambda x: int(x) / 10.0 if -50 <= int(x) <= 850 else None,
+        )
+        for i in [2, 6, 7, 8, 9, 10, 11]
+    ],
+    HttpcontrolSensorDescription(
+        key="ia13",
+        name="Temperature",
+        device_class=SensorDeviceClass.TEMPERATURE,
+        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+        value_fn = lambda x: int(x) / 10.0,
+    ),
+    HttpcontrolSensorDescription(
+        key="ia14",
+        name="Humidity",
+        device_class=SensorDeviceClass.HUMIDITY,
+        native_unit_of_measurement=PERCENTAGE,
+        value_fn = lambda x: int(x) / 10.0,
+    ),
+]
+
+SENSORS_2x = [
+    HttpcontrolSensorDescription(
+        key="ia0",
+        name="Board Temperature",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        entity_registry_enabled_default=True,
+        device_class=SensorDeviceClass.TEMPERATURE,
+        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+        value_fn = lambda x: int(x) / 10.0,
+    ),
+    HttpcontrolSensorDescription(
+        key="ia1",
+        name="Board Voltage",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        entity_registry_enabled_default=True,
+        device_class=SensorDeviceClass.VOLTAGE,
+        native_unit_of_measurement=UnitOfElectricPotential.VOLT,
         value_fn = lambda x: int(x) / 10.0,
     ),
     HttpcontrolSensorDescription(
@@ -74,7 +138,6 @@ SENSORS_2x = [
         name="Inp3",
         device_class=SensorDeviceClass.TEMPERATURE,
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
-        suggested_display_precision=1,
         value_fn = lambda x: int(x) / 10.0 if -30 <= int(x) <= 420 else None,
     ),
     HttpcontrolSensorDescription(
@@ -90,7 +153,6 @@ SENSORS_2x = [
         name="Inp5",
         device_class=SensorDeviceClass.VOLTAGE,
         native_unit_of_measurement=UnitOfElectricPotential.VOLT,
-        suggested_display_precision=1,
         value_fn = lambda x: int(x) / 10.0,
     ),
     *[
@@ -109,7 +171,6 @@ SENSORS_2x = [
         name="Temperature",
         device_class=SensorDeviceClass.TEMPERATURE,
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
-        suggested_display_precision=1,
         value_fn = lambda x: int(x) / 10.0,
     ),
     HttpcontrolSensorDescription(
@@ -117,7 +178,6 @@ SENSORS_2x = [
         name="Humidity",
         device_class=SensorDeviceClass.HUMIDITY,
         native_unit_of_measurement=PERCENTAGE,
-        suggested_display_precision=1,
         value_fn = lambda x: int(x) / 10.0,
     ),
 ]
@@ -147,7 +207,6 @@ SENSORS_3x = [
         name="Temperature",
         device_class=SensorDeviceClass.TEMPERATURE,
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
-        suggested_display_precision=1,
         value_fn = lambda x: int(x) / 10.0 if x != "-600" else None,
     ),
     HttpcontrolSensorDescription(
@@ -155,7 +214,6 @@ SENSORS_3x = [
         name="Humidity",
         device_class=SensorDeviceClass.HUMIDITY,
         native_unit_of_measurement=PERCENTAGE,
-        suggested_display_precision=1,
         value_fn = lambda x: int(x) / 10.0 if x != "-600" else None,
     ),
     HttpcontrolSensorDescription(
@@ -179,7 +237,6 @@ SENSORS_3x = [
         HttpcontrolSensorDescription(
             key=f"ds{i}",
             name=f"DS{i}",
-            suggested_display_precision=1,
             value_fn=lambda x: int(x) / 10.0 if x != "-600" else None,
         )
         for i in range(1, 9)
@@ -188,12 +245,17 @@ SENSORS_3x = [
         HttpcontrolSensorDescription(
             key=f"inpp{i}",
             name=f"Input {i}",
-            suggested_display_precision=1,
             value_fn=lambda x: int(x) / 100.0,
         )
         for i in range(1, 7)
     ],
 ]
+
+SENSORS = {
+    "1.x": SENSORS_1x,
+    "2.x": SENSORS_2x,
+    "3.x": SENSORS_3x,
+}
 
 async def async_setup_entry(
     hass: HomeAssistant,
@@ -202,10 +264,9 @@ async def async_setup_entry(
 ) -> None:
     coordinator: HttpcontrolCoordinator = hass.data[DOMAIN][entry.entry_id]
 
-    entities = SENSORS_3x if coordinator.is_3x() else SENSORS_2x
     async_add_entities(
         HttpcontrolSensor(coordinator, entity)
-        for entity in entities
+        for entity in SENSORS[coordinator.data.model]
         if entity.key in coordinator.data.state
     )
 
