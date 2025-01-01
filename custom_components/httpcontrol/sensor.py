@@ -287,12 +287,7 @@ class HttpcontrolSensor(HttpcontrolEntity, SensorEntity):
     entity_description: HttpcontrolSensorDescription
 
     def __init__(self, coordinator: HttpcontrolCoordinator, description: HttpcontrolSensorDescription):
-        super().__init__(coordinator)
-
-        self.entity_description = description
-        self._attr_unique_id = coordinator.unique_id(description.key)
-        if name := coordinator.labels.get(description.key):
-            self._attr_name = name
+        super().__init__(coordinator, description)
         if "ia17" == description.key:
             self._attr_native_unit_of_measurement = coordinator.measure_unit
 

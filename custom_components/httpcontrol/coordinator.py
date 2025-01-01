@@ -91,7 +91,7 @@ class HttpcontrolCoordinator(DataUpdateCoordinator[HttpcontrolData]):
             for i in range(0, 6):
                 self.labels[f"ia{i+7}"] = names[i]
             for i in range(6, 10):
-                self.labels[f"di{i-5}"] = names[i]
+                self.labels[f"di{i-6}"] = names[i]
 
             for i in range(6, 12):
                 self.labels[f"out{i-6}"] = data[f"r{i}"]
@@ -105,7 +105,7 @@ class HttpcontrolCoordinator(DataUpdateCoordinator[HttpcontrolData]):
             for i in range(0, 6):
                 self.labels[f"ia{i+7}"] = names[i]
             for i in range(6, 10):
-                self.labels[f"di{i-5}"] = names[i]
+                self.labels[f"di{i-6}"] = names[i]
 
             for i in range(5, 10):
                 self.labels[f"out{i-5}"] = data[f"r{i}"]

@@ -60,12 +60,7 @@ class HttpcontrolSwitch(HttpcontrolEntity, SwitchEntity):
     entity_description: HttpcontrolSwitchDescription
 
     def __init__(self, coordinator: HttpcontrolCoordinator, description: HttpcontrolSwitchDescription):
-        super().__init__(coordinator)
-
-        self.entity_description = description
-        self._attr_unique_id = coordinator.unique_id(description.key)
-        if name := coordinator.labels.get(description.key):
-            self._attr_name = name
+        super().__init__(coordinator, description)
 
     @property
     def is_on(self) -> bool:
@@ -76,7 +71,7 @@ class HttpcontrolSwitch(HttpcontrolEntity, SwitchEntity):
 
     @property
     def extra_state_attributes(self) -> Mapping[str, Any] | None:
-        attrs = {}
+        attrs = super().extra_state_attributes
         if rtime := self.coordinator.rtimes.get(self.entity_description.key, None):
             attrs["Reset time"] = rtime
         return attrs

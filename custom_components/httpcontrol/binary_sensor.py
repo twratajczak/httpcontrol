@@ -52,12 +52,7 @@ class HttpcontrolBinarySensor(HttpcontrolEntity, BinarySensorEntity):
     entity_description: HttpcontrolBinarySensorDescription
 
     def __init__(self, coordinator: HttpcontrolCoordinator, description: HttpcontrolBinarySensorDescription):
-        super().__init__(coordinator)
-
-        self.entity_description = description
-        self._attr_unique_id = coordinator.unique_id(description.key)
-        if name := coordinator.labels.get(description.key):
-            self._attr_name = name
+        super().__init__(coordinator, description)
 
     @property
     def is_on(self) -> bool | None:
